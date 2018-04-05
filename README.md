@@ -1,6 +1,8 @@
 # issuelabeler  
 
-<img src="/assets/issuelabeler-logo.png" width="200" height="200">
+<img src="/assets/issuelabeler-logo.png" width="200" height="200">  
+
+[![Build Status](https://travis-ci.org/riyadhalnur/issuelabeler.svg?branch=master)](https://travis-ci.org/riyadhalnur/issuelabeler) [![Known Vulnerabilities](https://snyk.io/test/github/riyadhalnur/issuelabeler/badge.svg?targetFile=package.json)](https://snyk.io/test/github/riyadhalnur/issuelabeler?targetFile=package.json)  
 
 > A GitHub bot to label issues automatically based on title and body against list of defined labels. Built with [probot](https://github.com/probot/probot).  
 
