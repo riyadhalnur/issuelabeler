@@ -4,6 +4,8 @@
 
 > A GitHub bot to label issues automatically based on title and body against list of defined labels. Built with [probot](https://github.com/probot/probot).  
 
+![Screenshot](assets/screenshot.png)  
+
 ### Contributing  
 Read the [CONTRIBUTING](CONTRIBUTING.md) guide for information.  
 
