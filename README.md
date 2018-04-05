@@ -1,5 +1,7 @@
 # issuelabeler  
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/riyadhalnur/issuelabeler.svg)](https://greenkeeper.io/)
+
 <img src="/assets/issuelabeler-logo.png" width="200" height="200">  
 
 [![Build Status](https://travis-ci.org/riyadhalnur/issuelabeler.svg?branch=master)](https://travis-ci.org/riyadhalnur/issuelabeler) [![Known Vulnerabilities](https://snyk.io/test/github/riyadhalnur/issuelabeler/badge.svg?targetFile=package.json)](https://snyk.io/test/github/riyadhalnur/issuelabeler?targetFile=package.json)  
