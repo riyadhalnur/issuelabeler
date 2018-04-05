@@ -1,0 +1,30 @@
+{
+  "name": "issuelabeler",
+  "version": "1.0.0",
+  "description": "A GitHub bot to label issues automatically based on title and body against list of defined labels",
+  "author": "Riyadh Al Nur <riyadhalnur@verticalaxisbd.com>",
+  "license": "MIT",
+  "repository": "https://github.com/riyadhalnur/issuelabeler.git",
+  "scripts": {
+    "start": "probot run ./index.js",
+    "dev": "nodemon --exec \"npm start\"",
+    "test": "jest && standard"
+  },
+  "dependencies": {
+    "probot": "^6.0.0"
+  },
+  "devDependencies": {
+    "jest": "^21.2.1",
+    "nodemon": "1.17.3",
+    "smee-client": "1.0.1",
+    "standard": "^10.0.3"
+  },
+  "engines": {
+    "node": ">= 8.3.0"
+  },
+  "standard": {
+    "env": [
+      "jest"
+    ]
+  }
+}
