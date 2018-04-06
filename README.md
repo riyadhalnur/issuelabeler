@@ -8,6 +8,17 @@
 
 ![Screenshot](assets/screenshot.png)  
 
+### Installation  
+After installation, create `.github/labeler.yml` in the default branch to enable it:
+
+```yml
+# Number of labels to fetch (optional). Defaults to 20
+numLabels: 40
+# These labels will not be used even if the issue contains them
+excludeLabels:
+  - pinned
+```  
+
 ### Contributing  
 Read the [CONTRIBUTING](CONTRIBUTING.md) guide for information.  
 
