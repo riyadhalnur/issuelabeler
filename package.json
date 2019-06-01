@@ -1,6 +1,6 @@
 {
   "name": "issuelabeler",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A GitHub bot to label issues automatically based on title and body against list of defined labels",
   "author": "Riyadh Al Nur <riyadhalnur@verticalaxisbd.com>",
   "license": "MIT",
