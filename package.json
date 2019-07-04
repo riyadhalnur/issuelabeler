@@ -8,10 +8,13 @@
   "scripts": {
     "start": "probot run ./index.js",
     "dev": "nodemon --exec \"npm start\"",
-    "test": "jest && standard"
+    "test": "jest && standard",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "dependencies": {
-    "probot": "6.2.1"
+    "probot": "6.2.1",
+    "snyk": "^1.189.0"
   },
   "devDependencies": {
     "jest": "24.8.0",
@@ -26,5 +29,6 @@
     "env": [
       "jest"
     ]
-  }
+  },
+  "snyk": true
 }
