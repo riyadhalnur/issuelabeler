@@ -1,0 +1,117 @@
+service: issuelabler-bot
+
+frameworkVersion: ">=1.45.0 <2.0.0"
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+
+  stage: ${opt:stage, 'development'}
+  region: ${opt:region, 'ap-southeast-1'}
+
+  environment:
+    NODE_ENV: ${opt.stage, 'development'}
+    APP_ID: ${file(env.yml):secrets.APP_ID, ''}
+    WEBHOOK_SECRET: ${file(env.yml):secrets.WEBHOOK_SECRET, ''}
+    PRIVATE_KEY_PATH: ${file(env.yml):secrets.PRIVATE_KEY_PATH, ''}
+
+plugins:
+  - serverless-plugin-scripts
+
+custom:
+  defaultVpcId: 'vpc-67ad0202'
+  subnet1: 'subnet-09a7386c'
+  subnet2: 'subnet-2aa7215d'
+  scripts:
+    hooks:
+      'package:initialize': make
+      'deploy:finalize': make clean
+
+package:
+  individually: true
+  include:
+    - 'src/**'
+    - 'package.json'
+    - 'package-lock.json'
+  exclude:
+    - '**/*'
+
+layers:
+  modulesLib:
+    package:
+      artifact: modules.zip
+    compatibleRuntimes:
+      - nodejs10.x
+  privateKey:
+    package:
+      artifact: key.zip
+
+functions:
+  labelerbot:
+    handler: 'src/handler.bot'
+    name: issuelabeler-bot-${self:provider.stage}
+    memorySize: 512
+    timeout: 30
+    layers:
+      - { Ref: ModulesLibLambdaLayer }
+      - { Ref: PrivateKeyLambdaLayer }
+    events:
+      - alb:
+          priority: 1
+          listenerArn: { Ref: HTTPListener }
+          conditions:
+            path: /probot
+            method:
+              - GET
+
+resources:
+  Resources:
+    SecurityGroup:
+      Type: 'AWS::EC2::SecurityGroup'
+      Properties:
+        GroupName: 'issuelabeler-bot'
+        GroupDescription: 'HTTPS/HTTPS inbound only for bot'
+        VpcId: ${self:custom.defaultVpcId}
+        SecurityGroupIngress:
+          - IpProtocol: tcp
+            FromPort: '80'
+            ToPort: '80'
+            CidrIp: 0.0.0.0/0
+          # -
+          #   IpProtocol: tcp
+          #   FromPort: '443'
+          #   ToPort: '443'
+          #   CidrIp: 0.0.0.0/0
+        SecurityGroupEgress:
+          - IpProtocol: -1
+            CidrIp: 0.0.0.0/0
+
+    LoadBalancer:
+      Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
+      Properties:
+        Type: 'application'
+        Name: 'issuelabeler-lb-${self:provider.stage}'
+        IpAddressType: 'ipv4'
+        Scheme: 'internet-facing'
+        LoadBalancerAttributes:
+          - { Key: 'deletion_protection.enabled', Value: false }
+          - { Key: 'routing.http2.enabled', Value: true }
+        SecurityGroups:
+          - { Ref: SecurityGroup }
+        Subnets:
+          - ${self:custom.subnet1}
+          - ${self:custom.subnet2}
+
+    HTTPListener:
+      Type: 'AWS::ElasticLoadBalancingV2::Listener'
+      Properties:
+        LoadBalancerArn: { Ref: LoadBalancer }
+        Port: 80
+        Protocol: 'HTTP'
+        DefaultActions:
+          - Type: 'fixed-response'
+            Order: 1
+            FixedResponseConfig:
+              StatusCode: 200
+              ContentType: 'application/json'
+              MessageBody: 'PONG'
