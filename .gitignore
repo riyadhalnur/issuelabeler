@@ -8,6 +8,10 @@ jspm_packages
 # Env files
 .env
 .envrc
+env.yml
 
 # Private key files
 *.pem
+
+# Zip files
+*.zip
