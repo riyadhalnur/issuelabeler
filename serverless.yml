@@ -58,9 +58,30 @@ functions:
     events:
       - alb:
           priority: 1
-          listenerArn: { Ref: HTTPListener }
+          listenerArn: { Ref: HTTPSListener }
+          conditions:
+            path: /
+            method:
+              - POST
+      - alb:
+          priority: 2
+          listenerArn: { Ref: HTTPSListener }
           conditions:
             path: /probot
+            method:
+              - GET
+      - alb:
+          priority: 3
+          listenerArn: { Ref: HTTPSListener }
+          conditions:
+            path: /probot/stats
+            method:
+              - GET
+      - alb:
+          priority: 4
+          listenerArn: { Ref: HTTPSListener }
+          conditions:
+            path: /ping
             method:
               - GET
 
@@ -77,11 +98,10 @@ resources:
             FromPort: '80'
             ToPort: '80'
             CidrIp: 0.0.0.0/0
-          # -
-          #   IpProtocol: tcp
-          #   FromPort: '443'
-          #   ToPort: '443'
-          #   CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: '443'
+            ToPort: '443'
+            CidrIp: 0.0.0.0/0
         SecurityGroupEgress:
           - IpProtocol: -1
             CidrIp: 0.0.0.0/0
@@ -109,9 +129,24 @@ resources:
         Port: 80
         Protocol: 'HTTP'
         DefaultActions:
+          - Type: 'redirect'
+            RedirectConfig:
+              Protocol: 'HTTPS'
+              Port: '443'
+              StatusCode: 'HTTP_301'
+
+    HTTPSListener:
+      Type: 'AWS::ElasticLoadBalancingV2::Listener'
+      Properties:
+        LoadBalancerArn: { Ref: LoadBalancer }
+        Certificates:
+          - CertificateArn: ${file(env.yml):secrets.CERT_ARN}
+        Port: 443
+        Protocol: 'HTTPS'
+        DefaultActions:
           - Type: 'fixed-response'
             Order: 1
             FixedResponseConfig:
               StatusCode: 200
               ContentType: 'application/json'
-              MessageBody: 'PONG'
+              MessageBody: 'BOT WORKS'
