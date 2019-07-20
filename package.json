@@ -11,7 +11,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "bugs": {
     "url": "https://github.com/riyadhalnur/issuelabeler/issues"
@@ -21,5 +21,8 @@
     "@probot/serverless-lambda": "0.3.0",
     "probot": "9.2.19",
     "serverless-plugin-scripts": "1.0.2"
+  },
+  "devDependencies": {
+    "jest": "24.8.0"
   }
 }

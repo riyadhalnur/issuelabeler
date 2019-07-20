@@ -1,6 +1,9 @@
 {
-  "event": "issues",
-  "payload": {
+  "headers": {
+    "X-Github-Event": "issues",
+    "x-github-delivery": 123
+  },
+  "body": {
     "action": "opened",
     "issue": {
       "url": "https://api.github.com/repos/issuebot/test/issues/2",
