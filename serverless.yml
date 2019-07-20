@@ -14,6 +14,7 @@ provider:
     APP_ID: ${file(env.yml):secrets.APP_ID, ''}
     WEBHOOK_SECRET: ${file(env.yml):secrets.WEBHOOK_SECRET, ''}
     PRIVATE_KEY_PATH: ${file(env.yml):secrets.PRIVATE_KEY_PATH, ''}
+    DISABLE_STATS: true
 
 plugins:
   - serverless-plugin-scripts
@@ -70,20 +71,21 @@ functions:
             path: /probot
             method:
               - GET
-      - alb:
-          priority: 3
-          listenerArn: { Ref: HTTPSListener }
-          conditions:
-            path: /probot/stats
-            method:
-              - GET
-      - alb:
-          priority: 4
-          listenerArn: { Ref: HTTPSListener }
-          conditions:
-            path: /ping
-            method:
-              - GET
+      # disable until fixed in probot module
+      # - alb:
+      #     priority: 3
+      #     listenerArn: { Ref: HTTPSListener }
+      #     conditions:
+      #       path: /probot/stats
+      #       method:
+      #         - GET
+      # - alb:
+      #     priority: 4
+      #     listenerArn: { Ref: HTTPSListener }
+      #     conditions:
+      #       path: /ping
+      #       method:
+      #         - GET
 
 resources:
   Resources:
@@ -149,4 +151,4 @@ resources:
             FixedResponseConfig:
               StatusCode: 200
               ContentType: 'application/json'
-              MessageBody: 'BOT WORKS'
+              MessageBody: 'PONG'
