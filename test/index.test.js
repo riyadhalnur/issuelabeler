@@ -1,26 +1,25 @@
-const { createRobot } = require('probot')
-const plugin = require('..')
-const event = require('./fixtures/event')
-const payload = require('./fixtures/payload')
+const { serverless } = require('@probot/serverless-lambda');
+
+const handler = require('../src/handler');
+const app = require('../src/app');
+const event = require('./fixtures/event');
+const payload = require('./fixtures/payload');
 
 describe('issuelabeler', () => {
-  let robot
+  let context
   let github
 
   beforeEach(() => {
-    robot = createRobot()
-    plugin(robot)
-
     github = {
       repos: {
-        getContent: jest.fn().mockReturnValue(Promise.resolve({
+        getContents: jest.fn().mockReturnValue(Promise.resolve({
           data: {
             content: Buffer.from(`excludeLabels:\n  - hey`).toString('base64')
           }
         }))
       },
       issues: {
-        getLabels: jest.fn().mockReturnValue(Promise.resolve({
+        listLabelsForRepo: jest.fn().mockReturnValue(Promise.resolve({
           data: [
             {
               id: 889466157,
@@ -41,30 +40,32 @@ describe('issuelabeler', () => {
         get: jest.fn().mockReturnValue(Promise.resolve({
           data: payload
         })),
-        addLabels: jest.fn().mockReturnValue(Promise.resolve())
+        addLabels: jest.fn().mockReturnValue(Promise.resolve({}))
       }
-    }
+    };
 
-    robot.auth = () => Promise.resolve(github)
-  })
+    context = { done: jest.fn() };
+    handler.bot = serverless(async robot => {
+      robot.auth = jest.fn().mockResolvedValue(github)
+      robot.on('issues.opened', app)
+    });
+  });
 
-  test('that required API calls are made', async () => {
-    await robot.receive(event)
+  test('that labels are applied to an issue', async () => {
+    await handler.bot(event, context);
 
-    expect(github.issues.getLabels).toHaveBeenCalled()
-    expect(github.issues.get).toHaveBeenCalled()
-  })
-
-  test('that proper labels have been applied to an issue', async () => {
-    await robot.receive(event)
-
+    expect(github.repos.getContents).toHaveBeenCalled();
+    expect(github.issues.listLabelsForRepo).toHaveBeenCalled();
+    expect(github.issues.get).toHaveBeenCalled();
     expect(github.issues.addLabels).toHaveBeenCalledWith({
+      issue_number: 2,
       number: 2,
       owner: 'issuebot',
       repo: 'test',
       labels: [
         'test'
       ]
-    })
-  })
-})
+    });
+    expect(context.done).toHaveBeenCalled();
+  });
+});
