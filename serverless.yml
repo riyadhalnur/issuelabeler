@@ -20,9 +20,9 @@ plugins:
   - serverless-plugin-scripts
 
 custom:
-  defaultVpcId: 'vpc-67ad0202'
-  subnet1: 'subnet-09a7386c'
-  subnet2: 'subnet-2aa7215d'
+  defaultVpcId: ${file(env.yml):secrets.VPC_ID}
+  subnet1: ${file(env.yml):secrets.SUBNET_1}
+  subnet2: ${file(env.yml):secrets.SUBNET_2}
   scripts:
     hooks:
       'package:initialize': make
