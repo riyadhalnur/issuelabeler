@@ -71,7 +71,7 @@ functions:
             path: /probot
             method:
               - GET
-      # disable until fixed in probot module
+      # TODO: enable when fixed in probot module
       # - alb:
       #     priority: 3
       #     listenerArn: { Ref: HTTPSListener }
