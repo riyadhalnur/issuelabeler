@@ -19,7 +19,7 @@
   "homepage": "https://riyadhalnur.github.io/issuelabeler/",
   "dependencies": {
     "@probot/serverless-lambda": "0.3.0",
-    "probot": "9.2.19",
+    "probot": "9.6.4",
     "serverless-plugin-scripts": "1.0.2"
   },
   "devDependencies": {
