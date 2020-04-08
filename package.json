@@ -18,11 +18,11 @@
   },
   "homepage": "https://riyadhalnur.github.io/issuelabeler/",
   "dependencies": {
-    "@probot/serverless-lambda": "0.4.0",
-    "probot": "9.9.1",
+    "@probot/serverless-lambda": "0.5.0",
+    "probot": "9.11.2",
     "serverless-plugin-scripts": "1.0.2"
   },
   "devDependencies": {
-    "jest": "24.9.0"
+    "jest": "25.2.7"
   }
 }
