@@ -2,14 +2,16 @@ const { serverless } = require('@probot/serverless-lambda');
 
 const handler = require('../src/handler');
 const app = require('../src/app');
-const event = require('./fixtures/event');
+
+const event_opened = require('./fixtures/event_opened');
+const event_edited = require('./fixtures/event_edited');
 const payload = require('./fixtures/payload');
 
 describe('issuelabeler', () => {
   let context
   let github
 
-  beforeEach(() => {
+  beforeAll(() => {
     github = {
       repos: {
         getContents: jest.fn().mockReturnValue(Promise.resolve({
@@ -54,12 +56,31 @@ describe('issuelabeler', () => {
     context = { done: jest.fn() };
     handler.bot = serverless(async robot => {
       robot.auth = jest.fn().mockResolvedValue(github)
-      robot.on('issues.opened', app)
+      robot.on(handler.events, app)
     });
   });
 
-  test('that labels are applied to an issue', async () => {
-    await handler.bot(event, context);
+  test('that labels are applied to an issue when opened', async () => {
+    await handler.bot(event_opened, context);
+
+    expect(github.repos.getContents).toHaveBeenCalled();
+    expect(github.issues.listLabelsForRepo).toHaveBeenCalled();
+    expect(github.issues.get).toHaveBeenCalled();
+    expect(github.issues.addLabels).toHaveBeenCalledWith({
+      issue_number: 2,
+      number: 2,
+      owner: 'issuebot',
+      repo: 'test',
+      labels: [
+        'test',
+        'A-Feature'
+      ]
+    });
+    expect(context.done).toHaveBeenCalled();
+  });
+
+  test('that labels are applied to an issue when edited', async () => {
+    await handler.bot(event_edited, context);
 
     expect(github.repos.getContents).toHaveBeenCalled();
     expect(github.issues.listLabelsForRepo).toHaveBeenCalled();

@@ -13,7 +13,7 @@ module.exports = async context => {
   labels.data.map(label => labelList.push(label.name));
   labelList
     .filter(label => !config.excludeLabels.includes(label))
-    .map(label => issue.data.title.toLowerCase().includes(label) || issue.data.body.toLowerCase().includes(label) ? labelsToAdd.push(label) : null);
+    .map(label => issue.data.title.toLowerCase().includes(label.toLowerCase()) || issue.data.body.toLowerCase().includes(label.toLowerCase()) ? labelsToAdd.push(label) : null);
 
   return context.github.issues.addLabels(context.issue({ issue_number: issueCtx.number, labels: labelsToAdd }));
 };
