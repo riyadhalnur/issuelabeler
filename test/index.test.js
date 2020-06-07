@@ -34,6 +34,13 @@ describe('issuelabeler', () => {
               name: 'test',
               color: 'f5fc93',
               default: false
+            },
+            {
+              id: 889466159,
+              url: 'https://api.github.com/repos/issuebot/test/labels/a-feature',
+              name: 'A-Feature',
+              color: 'f5fc93',
+              default: false
             }
           ]
         })),
@@ -63,7 +70,8 @@ describe('issuelabeler', () => {
       owner: 'issuebot',
       repo: 'test',
       labels: [
-        'test'
+        'test',
+        'A-Feature'
       ]
     });
     expect(context.done).toHaveBeenCalled();

@@ -38,7 +38,7 @@
   "updated_at": "2018-04-05T06:59:48Z",
   "closed_at": null,
   "author_association": "OWNER",
-  "body": "hey",
+  "body": "hey\nA-Feature",
   "closed_by": null,
   "reactions": {
     "url": "https://api.github.com/repos/issuebot/test/issues/2/reactions",
