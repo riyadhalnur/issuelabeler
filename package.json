@@ -11,7 +11,9 @@
     "test": "test"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "bugs": {
     "url": "https://github.com/riyadhalnur/issuelabeler/issues"
@@ -20,9 +22,11 @@
   "dependencies": {
     "@probot/serverless-lambda": "0.5.0",
     "probot": "9.11.5",
-    "serverless-plugin-scripts": "1.0.2"
+    "serverless-plugin-scripts": "1.0.2",
+    "snyk": "^1.336.0"
   },
   "devDependencies": {
     "jest": "26.0.1"
-  }
+  },
+  "snyk": true
 }
