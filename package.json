@@ -1,7 +1,7 @@
 {
   "name": "issuelabeler",
   "version": "2.1.0",
-  "description": "A GitHub bot to label issues automatically based on title and body against list of defined labels>",
+  "description": "A GitHub bot to label issues automatically based on title and body against list of defined labels",
   "author": "Riyadh Al Nur <riyadhalnur@verticalaxisbd.com>",
   "license": "MIT",
   "repository": "https://github.com/riyadhalnur/issuelabeler.git",
@@ -11,6 +11,8 @@
     "test": "test"
   },
   "scripts": {
+    "lint": "prettier --check '*.{js,md,json}' 'test/**/*.{js,json}' '.github/**/*.yml'",
+    "lint:fix": "prettier --write '*.{js,md,json}' 'test/**/*.{js,json}' '.github/**/*.yml'",
     "test": "jest"
   },
   "bugs": {
@@ -18,11 +20,12 @@
   },
   "homepage": "https://riyadhalnur.github.io/issuelabeler/",
   "dependencies": {
-    "@probot/serverless-lambda": "0.5.0",
-    "probot": "9.11.5",
+    "@probot/adapter-aws-lambda-serverless": "2.0.0",
     "serverless-plugin-scripts": "1.0.2"
   },
   "devDependencies": {
-    "jest": "26.0.1"
+    "jest": "26.0.1",
+    "nock": "13.0.7",
+    "prettier": "2.2.1"
   }
 }
