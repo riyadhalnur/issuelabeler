@@ -12,11 +12,7 @@
 secrets:
   APP_ID: <github-appid>
   WEBHOOK_SECRET: <webhhok-secret>
-  PRIVATE_KEY_PATH: "/opt/<private-key-name>.pem"
-  CERT_ARN: "<aws-certificate-arn>"
-  VPC_ID: "<default-or-custom-vpc-id>"
-  SUBNET_1: "<subnet-1-id>"
-  SUBNET_2: "<subnet-2-id>"
+  PRIVATE_KEY: "/opt/<private-key-name>.pem"
 ```  
 4. Deploy using `sls deploy -v`  
 
