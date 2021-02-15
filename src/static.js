@@ -1,11 +1,11 @@
-"use strict";
+'use strict';
 
 module.exports.catch = async (event, context) => {
   try {
     context.callbackWaitsForEmptyEventLoop = false;
     return {
       statusCode: 200,
-      body: "PONG",
+      body: 'PONG',
     };
   } catch (error) {
     return {
