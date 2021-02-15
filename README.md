@@ -20,6 +20,26 @@ numLabels: 40
 # excludeLabels: []
 excludeLabels:
   - pinned
+# custom configuration to override default behaviour
+# control explicitly what gets added and when
+custom:
+  - location: title
+    keywords:
+      - "hi"
+    labels:
+      - hey
+      - h
+  - location: body
+    keywords:
+      - "hey"
+    labels:
+      - feature:new
+      - hey
+  - location: body
+    keywords:
+      - "hi"
+    labels:
+      - h
 ```
 
 ### Contributing
