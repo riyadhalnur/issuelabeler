@@ -11,8 +11,8 @@
     "test": "test"
   },
   "scripts": {
-    "lint": "prettier --check '*.{js,md,json}' 'test/**/*.{js,json}' '.github/**/*.yml'",
-    "lint:fix": "prettier --write '*.{js,md,json}' 'test/**/*.{js,json}' '.github/**/*.yml'",
+    "lint": "prettier --single-quote --check '*.{js,md,json}' 'src/**/*.js' 'test/**/*.{js,json}' '.github/**/*.yml'",
+    "lint:fix": "prettier --single-quote --write '*.{js,md,json}' 'src/**/*.js' 'test/**/*.{js,json}' '.github/**/*.yml'",
     "test": "jest"
   },
   "bugs": {
