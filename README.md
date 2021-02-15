@@ -25,19 +25,19 @@ excludeLabels:
 custom:
   - location: title
     keywords:
-      - "hi"
+      - 'hi'
     labels:
       - hey
       - h
   - location: body
     keywords:
-      - "hey"
+      - 'hey'
     labels:
       - feature:new
       - hey
   - location: body
     keywords:
-      - "hi"
+      - 'hi'
     labels:
       - h
 ```

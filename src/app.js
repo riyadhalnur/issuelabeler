@@ -7,7 +7,7 @@ const loc_title = 'title';
 const addCustomLabels = (issue, config) => {
   let labels = [];
 
-  config.map((custCfg) => {
+  config.forEach((custCfg) => {
     if (
       custCfg.location === loc_body &&
       issue.body.toLowerCase().includes(custCfg.keywords.join(','))
