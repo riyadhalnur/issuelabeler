@@ -1,10 +1,22 @@
 service: issuelabler-bot
 
-frameworkVersion: ">=1.45.0 <2.0.0"
+frameworkVersion: "2"
 
 provider:
   name: aws
-  runtime: nodejs10.x
+  runtime: nodejs14.x
+  lambdaHashingVersion: 20201221
+  httpApi:
+    cors:
+      allowedOrigins:
+        - '*'
+      allowedHeaders:
+        - '*'
+      allowedMethods:
+        - get
+        - options
+        - post
+      allowCredentials: false
 
   stage: ${opt:stage, 'development'}
   region: ${opt:region, 'ap-southeast-1'}
@@ -15,14 +27,12 @@ provider:
     WEBHOOK_SECRET: ${file(env.yml):secrets.WEBHOOK_SECRET, ''}
     PRIVATE_KEY_PATH: ${file(env.yml):secrets.PRIVATE_KEY_PATH, ''}
     DISABLE_STATS: true
+    LOG_LEVEL: error
 
 plugins:
   - serverless-plugin-scripts
 
 custom:
-  defaultVpcId: ${file(env.yml):secrets.VPC_ID}
-  subnet1: ${file(env.yml):secrets.SUBNET_1}
-  subnet2: ${file(env.yml):secrets.SUBNET_2}
   scripts:
     hooks:
       'package:initialize': make
@@ -42,7 +52,7 @@ layers:
     package:
       artifact: modules.zip
     compatibleRuntimes:
-      - nodejs10.x
+      - nodejs14.x
   privateKey:
     package:
       artifact: key.zip
@@ -51,104 +61,23 @@ functions:
   labelerbot:
     handler: 'src/handler.bot'
     name: issuelabeler-bot-${self:provider.stage}
-    memorySize: 512
-    timeout: 30
+    memorySize: 256
+    timeout: 15
     layers:
       - { Ref: ModulesLibLambdaLayer }
       - { Ref: PrivateKeyLambdaLayer }
     events:
-      - alb:
-          priority: 1
-          listenerArn: { Ref: HTTPSListener }
-          conditions:
-            path: /
-            method:
-              - POST
-      - alb:
-          priority: 2
-          listenerArn: { Ref: HTTPSListener }
-          conditions:
-            path: /probot
-            method:
-              - GET
-      # TODO: enable when fixed in probot module
-      # - alb:
-      #     priority: 3
-      #     listenerArn: { Ref: HTTPSListener }
-      #     conditions:
-      #       path: /probot/stats
-      #       method:
-      #         - GET
-      # - alb:
-      #     priority: 4
-      #     listenerArn: { Ref: HTTPSListener }
-      #     conditions:
-      #       path: /ping
-      #       method:
-      #         - GET
-
-resources:
-  Resources:
-    SecurityGroup:
-      Type: 'AWS::EC2::SecurityGroup'
-      Properties:
-        GroupName: 'issuelabeler-bot'
-        GroupDescription: 'HTTPS/HTTPS inbound only for bot'
-        VpcId: ${self:custom.defaultVpcId}
-        SecurityGroupIngress:
-          - IpProtocol: tcp
-            FromPort: '80'
-            ToPort: '80'
-            CidrIp: 0.0.0.0/0
-          - IpProtocol: tcp
-            FromPort: '443'
-            ToPort: '443'
-            CidrIp: 0.0.0.0/0
-        SecurityGroupEgress:
-          - IpProtocol: -1
-            CidrIp: 0.0.0.0/0
-
-    LoadBalancer:
-      Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
-      Properties:
-        Type: 'application'
-        Name: 'issuelabeler-lb-${self:provider.stage}'
-        IpAddressType: 'ipv4'
-        Scheme: 'internet-facing'
-        LoadBalancerAttributes:
-          - { Key: 'deletion_protection.enabled', Value: false }
-          - { Key: 'routing.http2.enabled', Value: true }
-        SecurityGroups:
-          - { Ref: SecurityGroup }
-        Subnets:
-          - ${self:custom.subnet1}
-          - ${self:custom.subnet2}
-
-    HTTPListener:
-      Type: 'AWS::ElasticLoadBalancingV2::Listener'
-      Properties:
-        LoadBalancerArn: { Ref: LoadBalancer }
-        Port: 80
-        Protocol: 'HTTP'
-        DefaultActions:
-          - Type: 'redirect'
-            RedirectConfig:
-              Protocol: 'HTTPS'
-              Port: '443'
-              StatusCode: 'HTTP_301'
-
-    HTTPSListener:
-      Type: 'AWS::ElasticLoadBalancingV2::Listener'
-      Properties:
-        LoadBalancerArn: { Ref: LoadBalancer }
-        Certificates:
-          - CertificateArn: ${file(env.yml):secrets.CERT_ARN}
-        Port: 443
-        Protocol: 'HTTPS'
-        DefaultActions:
-          - Type: 'fixed-response'
-            Order: 1
-            FixedResponseConfig:
-              StatusCode: 200
-              ContentType: 'application/json'
-              MessageBody: 'PONG'
+      - httpApi:
+          path: /api/webhooks/github
+          method: post
+  catch:
+    handler: 'src/static.catch'
+    name: issuelabeler-bot-catch-${self:provider.stage}
+    memorySize: 128
+    timeout: 5
+    layers:
+      - { Ref: ModulesLibLambdaLayer }
+    events:
+      - httpApi:
+          path: /ping
+          method: get

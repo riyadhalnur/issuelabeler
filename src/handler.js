@@ -1,11 +1,11 @@
 'use strict';
 
-const { serverless } = require('@probot/serverless-lambda');
+const {
+  createLambdaFunction,
+  createProbot,
+} = require('@probot/adapter-aws-lambda-serverless');
 const app = require('./app');
 
-const eventTypes = ['issues.opened', 'issues.edited'];
-
 module.exports = {
-  events: eventTypes,
-  bot: serverless(robot => robot.on(eventTypes, app))
+  bot: createLambdaFunction(app, { probot: createProbot() }),
 };

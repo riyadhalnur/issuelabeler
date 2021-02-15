@@ -1,9 +1,7 @@
 {
-  "headers": {
-    "X-Github-Event": "issues",
-    "x-github-delivery": 123
-  },
-  "body": {
+  "name": "issues",
+  "number": 2,
+  "payload": {
     "action": "edited",
     "issue": {
       "url": "https://api.github.com/repos/issuebot/test/issues/2",
@@ -34,15 +32,11 @@
         "type": "User",
         "site_admin": false
       },
-      "labels": [
-
-      ],
+      "labels": [],
       "state": "open",
       "locked": false,
       "assignee": null,
-      "assignees": [
-
-      ],
+      "assignees": [],
       "milestone": null,
       "comments": 0,
       "created_at": "2018-04-05T06:09:02Z",

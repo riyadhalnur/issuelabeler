@@ -1,0 +1,18 @@
+custom:
+  - location: title
+    keywords:
+      - "hi"
+    labels:
+      - hey
+      - h
+  - location: body
+    keywords:
+      - "hey"
+    labels:
+      - feature:new
+      - hey
+  - location: body
+    keywords:
+      - "hi"
+    labels:
+      - h
