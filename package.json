@@ -20,7 +20,7 @@
   },
   "homepage": "https://riyadhalnur.github.io/issuelabeler/",
   "dependencies": {
-    "@probot/adapter-aws-lambda-serverless": "2.0.0",
+    "@probot/adapter-aws-lambda-serverless": "^3.0.0",
     "serverless-plugin-scripts": "1.0.2"
   },
   "devDependencies": {
