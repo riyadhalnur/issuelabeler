@@ -7,7 +7,7 @@ const path = require('path');
 const nock = require('nock');
 nock.disableNetConnect();
 
-const handler = require('../src/handler');
+// const handler = require('../src/handler');
 const app = require('../src/app');
 
 const event_opened = require('./fixtures/event_opened');
@@ -22,6 +22,8 @@ describe('issuelabeler', () => {
     probot = new Probot({
       // simple authentication as alternative to appId/privateKey
       githubToken: 'test',
+      appId: '1234',
+      privateKey: 'test',
       // disable logs
       logLevel: 'warn',
       // disable request throttling and retries
@@ -64,7 +66,7 @@ describe('issuelabeler', () => {
       .get('/repos/issuebot/test/issues/2')
       .reply(200, payload)
       .post('/repos/issuebot/test/issues/2/labels', (requestBody) => {
-        expect(requestBody).toEqual(['test', 'A-Feature']);
+        expect(requestBody).toEqual({"labels": ["test", "A-Feature"]});
         return true;
       })
       .reply(200, []);
@@ -104,7 +106,7 @@ describe('issuelabeler', () => {
       .get('/repos/issuebot/test/issues/2')
       .reply(200, payload)
       .post('/repos/issuebot/test/issues/2/labels', (requestBody) => {
-        expect(requestBody).toEqual(['hey', 'test', 'A-Feature']);
+        expect(requestBody).toEqual({"labels": ["hey", "test", "A-Feature"]});
         return true;
       })
       .reply(200, []);
@@ -144,7 +146,7 @@ describe('issuelabeler', () => {
       .get('/repos/issuebot/test/issues/2')
       .reply(200, payload)
       .post('/repos/issuebot/test/issues/2/labels', (requestBody) => {
-        expect(requestBody).toEqual(['test', 'A-Feature']);
+        expect(requestBody).toEqual({"labels": ["test", "A-Feature"]});
         return true;
       })
       .reply(200, []);
@@ -198,7 +200,7 @@ describe('issuelabeler', () => {
       .get('/repos/issuebot/test/issues/2')
       .reply(200, payload)
       .post('/repos/issuebot/test/issues/2/labels', (requestBody) => {
-        expect(requestBody).toEqual(['feature:new', 'hey']);
+        expect(requestBody).toEqual({"labels": ["feature:new", "hey"]});
         return true;
       })
       .reply(200, []);
